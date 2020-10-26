@@ -39,11 +39,16 @@ y_test = np.reshape(test_data[:,(features_number-1)],(1,x_test.shape[1]))
 
 # Values for parameters
 
-gamma_values=np.flip(np.power(0.5,np.array(range(26,41))))
-sigma_values=np.power(2,np.arange(7.0, 13.5, 0.5))
+gamma_values=np.flip(np.power(0.5,np.array(range(26,41)))).tolist()
+sigma_values=np.power(2,np.arange(7.0, 13.5, 0.5)).tolist()
 
 fold_size= (x_train.shape[1])//N_fold
 
+def K_calc(X1,X2,sigma):
+    sub=X1-X2
+    norm=np.dot(sub,np.transpose(sub)) # sum xi**2
+    return np.exp(-norm/(2*sigma**2))
+    
 # In[]
 best_gamma=-1
 best_sigma=-1
@@ -54,6 +59,7 @@ avg_val_MSE_plot=[]
                           
 for gamma in gamma_values:
     
+    
     avg_val_MSE_plot_help=[]
     
     for sigma in sigma_values:
@@ -61,7 +67,7 @@ for gamma in gamma_values:
         
         avg_val_MSE=0
         
-        print('gamma = '+str(gamma)+', sigma = '+str(sigma))
+        print('gamma id '+str(gamma_values.index(gamma))+', sigma id '+str(sigma_values.index(sigma)))
         
         for fold_id in range(N_fold): # work on first N fold
         
@@ -79,8 +85,8 @@ for gamma in gamma_values:
             
             for i in range(l):
                 for j in range(l):
-                    K_train[i,j]=np.exp(-np.sum(np.square(x_train_cross[:,i]-x_train_cross[:,j]))/(2*sigma**2))
-            
+                    
+                    K_train[i,j]=K_calc(x_train_cross[:,i],x_train_cross[:,j],sigma)            
             
             # Calculate K for this sigma and val fold, not square!
             l1=x_val_cross.shape[1]
@@ -88,7 +94,7 @@ for gamma in gamma_values:
             
             for i in range(l):
                 for j in range(l1):
-                    K_val[i,j]=np.exp(-np.sum(np.square(x_train_cross[:,i]-x_val_cross[:,j]))/(2*sigma**2))          
+                    K_val[i,j]=K_calc(x_train_cross[:,i],x_val_cross[:,j],sigma)            
           
                 
             # TRAINING for train folds, get alpha* for this combination of gamma and sigma
@@ -142,13 +148,13 @@ l3=x_train.shape[1]
 K_train=np.zeros((l3,l3))
 for i in range(l3):
     for j in range(l3):
-        K_train[i,j]=np.exp(-np.sum(np.square(x_train[:,i]-x_train[:,j]))/(2*best_gamma**2))
+        K_train[i,j] = K_calc(x_train[:,i],x_train[:,j],best_sigma)
         
 l4=x_test.shape[1]
 K_test=np.zeros((l3,l4))
 for i in range(l3):
     for j in range(l4):
-        K_train[i,j]=np.exp(-np.sum(np.square(x_train[:,i]-x_test[:,j]))/(2*best_gamma**2))
+        K_train[i,j]= K_calc(x_train[:,i],x_test[:,j],best_sigma)
         
 # Train
 
