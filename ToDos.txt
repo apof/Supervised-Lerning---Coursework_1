@@ -1,0 +1,11 @@
+Alexandra --> alex
+Apsotolos --> apo
+
+Pending Work:
+-Find the bug (training error bigger than valid error) at q1 --> alex and apo
+-Interpret the constant function fiting -> apo
+-Check the maths for linear kernelized ridge regression -> alex and apo
+-print also standard deviation for linear regression -> apo
+
+
+
