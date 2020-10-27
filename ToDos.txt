@@ -7,6 +7,7 @@ Pending Work:
 -Check the maths for linear kernelized ridge regression -> alex and apo, should be good.
 -print also standard deviation for linear regression -> apo
 - add to latex qns 1,2,3 as much as possible
+- ask mark about qn1 and qn 2
 
 
 
