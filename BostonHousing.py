@@ -1,7 +1,29 @@
 import numpy as np
-from sklearn.model_selection import train_test_split
 from numpy.linalg import inv
 
+### implementation of random train-test split
+def data_split(Data,test_size):
+
+	### create a random permuation of the data indexes
+	indexes = np.random.permutation(len(Data))
+	## define the test instances number
+	test_instances = int(test_size*len(Data))
+
+
+	train_data = []
+	test_data = []
+	## parse each datum and place it on the train or test set
+	## taking into account its randomly computed permutation index
+	for i in range(0,len(Data)):
+		if(i > test_instances):
+			train_data.append(np.array(Data[indexes[i]]))
+		else:
+			test_data.append(np.array(Data[indexes[i]]))
+
+	return np.array(train_data), np.array(test_data)
+
+
+## mean squared error implementation
 def mean_squared_error(y_pred,y_true):
 
 	mse = 0
@@ -25,8 +47,7 @@ def fit_with_constant_function(features_number,data_array,test_split,N):
 	for i in range(0,N):
     
 		# perform a new data split on train and test set on every rou
-		# suffle = True by default in this sklearn function
-		train_data, test_data = train_test_split(data_array,test_size=test_split)
+		train_data, test_data = data_split(data_array,test_split)
 
 		## initialize x vectors with ones - fit the data with constant function
 		x_train = np.asmatrix(np.ones(len(train_data))).T
@@ -86,7 +107,7 @@ def fit_with_one_feature(features_number,data_array,test_split,columns,N):
 
 	for i in range(0,N):
 
-		train_data, test_data = train_test_split(data_array,test_size=test_split)
+		train_data, test_data = data_split(data_array,test_split)
         
 		for j in range(0,(features_number-1)):
 
@@ -145,7 +166,7 @@ def fit_with_all_features(features_number,data_array,test_split,N):
 
 	for i in range(N):
 
-		train_data, test_data = train_test_split(data_array,test_size=test_split)
+		train_data, test_data = data_split(data_array,test_split)
 
 		y_train = train_data[:,(features_number-1)].T
 		y_test = test_data[:,(features_number-1)].T
@@ -179,4 +200,3 @@ def fit_with_all_features(features_number,data_array,test_split,N):
 	test_std = np.std(mse_test)
         
 	print("Linear regression using all the features with MSE - std train: " + str(np.sum(mse_train)/N) + "-" + str(train_std) + " MSE - std test: " +  str(np.sum(mse_test )/N) + "-" + str(test_std))
-
