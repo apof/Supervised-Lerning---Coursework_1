@@ -79,8 +79,6 @@ def fit_with_one_feature(features_number,data_array,test_split,columns,N):
 
 	mse_train = np.zeros((N,(features_number-1)))
 	mse_test = np.zeros((N,(features_number-1)))
-	train_std = 0
-	test_std = 0
 
 	for i in range(0,N):
 
@@ -116,7 +114,7 @@ def fit_with_one_feature(features_number,data_array,test_split,columns,N):
         
 	print("Linear Regression with single Features - Results")   
 	for i in range(len(mse_train.T)):
-		print("Linear regression using attribute: " + str(columns[i]) + " MSE train - std: " + str(np.mean((np.sum(mse_train,axis = 0)/N).T[i])) + " - " + str(std_train[i]) + " MSE test - std:" + str(np.mean((np.sum(mse_test,axis = 0 )/N).T[i])) + " - " + str(std_test[i]))
+		print("Linear regression using attribute: " + str(columns[i]) + " MSE train - std: " + str(np.mean(mse_train.T[i])) + " - " + str(std_train[i]) + " MSE test - std:" + str(np.mean(mse_test.T[i])) + " - " + str(std_test[i]))
 
 
  ## (d) Predicting with all the features
@@ -152,4 +150,4 @@ def fit_with_all_features(features_number,data_array,test_split,N):
 	train_std = np.std(mse_train)
 	test_std = np.std(mse_test)
         
-	print("Linear regression using all the features with MSE - std train: " + str(np.sum(mse_train)/N) + "-" + str(train_std) + " MSE - std test: " +  str(np.sum(mse_test )/N) + "-" + str(test_std))
+	print("Linear regression using all the features with MSE - std train: " + str(np.mean(mse_train)) + "-" + str(train_std) + " MSE - std test: " +  str(np.mean(mse_test )) + "-" + str(test_std))
